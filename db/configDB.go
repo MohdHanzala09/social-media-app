@@ -6,68 +6,78 @@ import (
 	"log"
 )
 
-
-func ConnectDB(dsn string) *sql.DB{
-	db , err := sql.Open("mysql" , dsn)
+func ConnectDB(dsn string) *sql.DB {
+	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
-		log.Fatalf("Error while connecting DB : %v" , err)
+		log.Fatalf("Error while connecting DB : %v", err)
 	}
 
-	if err := db.Ping(); err != nil{
-		log.Fatalf("Error Ping : %v" , err)
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Error Ping : %v", err)
 	}
 
 	query := `
-	CREATE TABLE IF NOT EXISTS users(
+	CREATE TABLE users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	name varchar(30) not null,
-	email varchar(50) not null unique,
-	password varchar(100),
-	dob DATE
-	)
+	name VARCHAR(100) NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
+	password VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 	`
 	_, err = db.Exec(query)
 	if err != nil {
-		log.Fatalf("Error creating table users %v :" , err)
+		log.Fatalf("Error creating table users %v :", err)
 	}
 	fmt.Println("UserTable created successfully")
 
 	query4 := `
-	CREATE TABLE IF NOT EXISTS posts(
-	tweet VARCHAR(100),
-	userid INT NOT NULL,
-	useremail VARCHAR(50) NOT NULL
-	)
+	CREATE TABLE tweets (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	content VARCHAR(280) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 	`
 	_, err = db.Exec(query4)
 	if err != nil {
-		log.Fatalf("Error creating table POSTS %v :" , err)
+		log.Fatalf("Error creating table POSTS %v :", err)
 	}
 	fmt.Println("PostTable created successfully")
 
-
 	query1 := `
-	CREATE TABLE IF NOT EXISTS likes(
-	likecount INT AUTO_INCREMENT PRIMARY KEY,
-	likebyemail varchar(50) not null
-	)
+	CREATE TABLE likes (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	tweet_id INT NOT NULL,
+	user_id INT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE KEY unique_like (tweet_id, user_id),
+	FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 	`
 	_, err = db.Exec(query1)
 	if err != nil {
-		log.Fatalf("Error creating table likes %v :" , err)
+		log.Fatalf("Error creating table likes %v :", err)
 	}
 	fmt.Println("LikesTable created successfully")
 
 	query2 := `
-	CREATE TABLE IF NOT EXISTS comments(
-	opinion VARCHAR(100),
-	commentersemail VARCHAR(50) not null
-	)
+	CREATE TABLE comments (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	tweet_id INT NOT NULL,
+	user_id INT NOT NULL,
+	content VARCHAR(500) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 	`
 	_, err = db.Exec(query2)
 	if err != nil {
-		log.Fatalf("Error creating table comments %v :" , err)
+		log.Fatalf("Error creating table comments %v :", err)
 	}
 	fmt.Println("CommentsTable created successfully")
 

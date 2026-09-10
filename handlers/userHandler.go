@@ -101,7 +101,7 @@ func CreateUser(c *echo.Context) error {
 
 	query := `INSERT INTO users (name,email,password,dob) VALUES (?,?,?,?)`
 
-	res, err := db.Exec(query, user.Name, user.Email, string(hashedPass) ,user.DOB)
+	res, err := db.Exec(query, user.Name, user.Email, string(hashedPass))
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "user creation failed"})
