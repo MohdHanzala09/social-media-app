@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/MohdHanzala09/social-media-app/handlers"
-	// "github.com/MohdHanzala09/social-media-app/middleware"
+	"github.com/MohdHanzala09/social-media-app/middleware"
 	"github.com/labstack/echo/v5"
 )
 
@@ -24,5 +24,5 @@ func RegisterAllUserRoutes(e *echo.Echo) {
 }
 
 func RegisterAllPostsRoutes(e *echo.Echo) {
-	// e.POST("/users/posts" , handlers.PostTweet , middleware.CheckToken)
+	e.POST("/users/posts" , handlers.PostTweet , middleware.CheckToken)
 }

@@ -18,7 +18,7 @@ func ConnectDB(dsn string) *sql.DB {
 	}
 
 	query := `
-	CREATE TABLE users (
+	CREATE TABLE IF NOT EXISTS users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	email VARCHAR(255) NOT NULL UNIQUE,
@@ -33,7 +33,7 @@ func ConnectDB(dsn string) *sql.DB {
 	fmt.Println("UserTable created successfully")
 
 	query4 := `
-	CREATE TABLE tweets (
+	CREATE TABLE IF NOT EXISTS tweets (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	user_id INT NOT NULL,
 	content VARCHAR(280) NOT NULL,
@@ -48,7 +48,7 @@ func ConnectDB(dsn string) *sql.DB {
 	fmt.Println("PostTable created successfully")
 
 	query1 := `
-	CREATE TABLE likes (
+	CREATE TABLE IF NOT EXISTS likes (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	tweet_id INT NOT NULL,
 	user_id INT NOT NULL,
@@ -65,7 +65,7 @@ func ConnectDB(dsn string) *sql.DB {
 	fmt.Println("LikesTable created successfully")
 
 	query2 := `
-	CREATE TABLE comments (
+	CREATE TABLE IF NOT EXISTS comments (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	tweet_id INT NOT NULL,
 	user_id INT NOT NULL,

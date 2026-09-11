@@ -61,7 +61,7 @@ func LoginUser(c *echo.Context) error {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 30)),
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256,claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
 	signtoken , err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError , map[string]string{"error":"could not create token"})
@@ -99,7 +99,7 @@ func CreateUser(c *echo.Context) error {
 		return c.JSON(http.StatusInternalServerError,map[string]string{"error":"server error"})
 	}
 
-	query := `INSERT INTO users (name,email,password,dob) VALUES (?,?,?,?)`
+	query := `INSERT INTO users (name,email,password) VALUES (?,?,?)`
 
 	res, err := db.Exec(query, user.Name, user.Email, string(hashedPass))
 
@@ -114,5 +114,6 @@ func CreateUser(c *echo.Context) error {
 
 	user.ID = int(id)
 
-	return c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusCreated, user)
+	return c.Redirect(http. StatusPermanentRedirect , "/login")
 }
