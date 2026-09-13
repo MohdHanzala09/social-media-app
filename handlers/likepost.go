@@ -9,13 +9,13 @@ import (
 
 func LikePost(c *echo.Context) error {
 	userid := c.Get("userID")
-	tweetid := c.Get("tweetID")
+	// tweetid := c.Get("tweetID")
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to like post"})
 	}
 
-	if userid == "" || tweetid == "" {
+	if userid == "" || id <= 0 {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "login first"})
 	}
 

@@ -25,5 +25,6 @@ func RegisterAllUserRoutes(e *echo.Echo) {
 
 func RegisterAllPostsRoutes(e *echo.Echo) {
 	e.POST("/users/posts" , handlers.PostTweet , middleware.CheckToken)
-	e.POST("users/posts/{id}" , handlers.LikePost , middleware.CheckToken)
+	e.POST("users/posts/{id}/likes" , handlers.LikePost , middleware.CheckToken)
+	e.POST("/users/posts/{id}/comments" , handlers.Comment , middleware.CheckToken)
 }
