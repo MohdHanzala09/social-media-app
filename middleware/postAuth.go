@@ -20,7 +20,7 @@ func CheckToken(next echo.HandlerFunc) echo.HandlerFunc {
 
 		claims := &models.Claims{}
 
-		token, err := jwt.ParseWithClaims(tokenstr, claims, func(t *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenstr, claims, func(t *jwt.Token) (interface{} , error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
@@ -29,7 +29,6 @@ func CheckToken(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		c.Set("UserID", claims.Id)
-		c.Set("UserEmail", claims.Email)
 
 		return next(c)
 	}
